@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Шпаргалка по Python — котики и код</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --bg: #f5f3ff;              /* светло-лавандовый фон */
+            --bg2: #ede9fe;             /* чуть более тёмный сиреневый */
+            --card-bg: #fdfbff;         /* почти белый с лёгким фиолетовым */
+            --accent: #ec4899;          /* розово-малиновый акцент */
+            --accent-soft: rgba(236,72,153,0.12);
+            --accent-strong: #db2777;
+            --text-main: #312e81;       /* насыщенный индиго */
+            --text-muted: #4b5563;      /* более контрастный серо-фиолетовый */
+            --border-subtle: #e5e7eb;
+            --code-bg: #0f172a;
+            --tag-bg: #ede9fe;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top, #fdf2ff 0, #e0e7ff 55%);
+            color: var(--text-main);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        a {
+            color: var(--accent-strong);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        header {
+            border-bottom: 1px solid var(--border-subtle);
+            background: linear-gradient(to right,
+                rgba(129,140,248,0.96),
+                rgba(244,114,182,0.96)
+            );
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+
+        .header-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 12px 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 0.04em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #fdfbff;
+        }
+
+        .logo-pill {
+            width: 28px;
+            height: 28px;
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 20%, #f9a8d4, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: #fdfbff;
+        }
+
+        .logo-pill span {
+            transform: translateY(-0.5px);
+        }
+
+        .logo-text span {
+            color: #e5e7eb;
+            font-weight: 400;
+            font-size: 0.85rem;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .nav-link {
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: rgba(253,250,255,0.95);
+            border: 1px solid rgba(196,181,253,0.9);
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            border-color: var(--accent);
+            color: var(--accent-strong);
+            text-decoration: none;
+            background: rgba(255,255,255,0.98);
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 18px 16px 20px;
+            display: grid;
+            grid-template-columns: minmax(0, 2.1fr) minmax(0, 0.9fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            main {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        .intro-card {
+            padding: 20px 20px 16px;
+            border-radius: 16px;
+            background: radial-gradient(circle at top left,
+                rgba(196,181,253,0.5),
+                rgba(253,250,255,0.98)
+            );
+            border: 1px solid rgba(196,181,253,0.85);
+            margin-bottom: 18px;
+        }
+
+        .intro-card h1 {
+            margin: 0 0 12px;
+            font-size: 1.6rem;
+        }
+
+        .intro-card p {
+            font-size: 0.98rem;
+        }
+
+        .intro-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 12px 0 4px;
+        }
+
+        .badge {
+            font-size: 0.78rem;
+            padding: 4px 9px;
+            border-radius: 999px;
+            background: rgba(250,250,255,0.9);
+            border: 1px solid rgba(209,213,219,0.9);
+            color: var(--text-muted);
+        }
+
+        .badge-accent {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+            color: var(--accent-strong);
+        }
+
+        .section-card {
+            background: linear-gradient(145deg,
+                rgba(253,250,255,0.98),
+                rgba(238,242,255,0.98)
+            );
+            border-radius: 16px;
+            padding: 15px 18px 14px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 10px 25px rgba(148,163,184,0.16);
+        }
+
+        .section-card h2 {
+            margin: 0 0 8px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-tag {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            color: var(--accent-strong);
+        }
+
+        .section-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .section-list {
+            margin: 5px 0 8px;
+            padding-left: 18px;
+            font-size: 0.95rem;
+        }
+
+        .section-list li {
+            margin-bottom: 4px;
+        }
+
+        .code-block {
+            background: radial-gradient(circle at top left, #0f172a, #020617);
+            border-radius: 10px;
+            padding: 10px 11px;
+            margin: 7px 0 3px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.83rem;
+            border: 1px solid rgba(129,140,248,0.85);
+            overflow-x: auto;
+            white-space: pre;
+            color: #e5e7eb;
+            line-height: 1.5;
+        }
+
+        .code-caption {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 3px;
+        }
+
+        .pill-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 7px;
+        }
+
+        .pill {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: var(--tag-bg);
+            color: var(--text-muted);
+        }
+
+        .pill-strong {
+            background: var(--accent-soft);
+            color: var(--accent-strong);
+        }
+
+        .side-panel {
+            position: sticky;
+            top: 72px;
+            align-self: flex-start;
+        }
+
+        .side-card {
+            background: rgba(253,250,255,0.98);
+            border-radius: 16px;
+            border: 1px solid var(--border-subtle);
+            padding: 14px 14px 10px;
+            margin-bottom: 16px;
+            box-shadow: 0 10px 25px rgba(148,163,184,0.16);
+        }
+
+        .side-card h3 {
+            margin: 0 0 8px;
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        .mini-list {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            padding-left: 18px;
+            margin: 4px 0 2px;
+        }
+
+        .mini-list li {
+            margin-bottom: 4px;
+        }
+
+        .toc {
+            font-size: 0.88rem;
+            display: grid;
+            gap: 5px;
+        }
+
+        .toc a {
+            padding: 5px 7px;
+            border-radius: 9px;
+            background: #f5f3ff;
+            border: 1px solid rgba(196,181,253,0.9);
+            color: var(--text-muted);
+        }
+
+        .toc a:hover {
+            border-color: var(--accent);
+            color: var(--accent-strong);
+            text-decoration: none;
+            background: #fef9ff;
+        }
+
+        footer {
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 10px;
+            background: rgba(250,250,255,0.95);
+        }
+
+        .footer-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 10px 16px 16px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 6px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+        <div class="logo">
+            <div class="logo-pill"><span>Py🐾</span></div>
+            <div class="logo-text">
+                Шпаргалка по Python<br>
+                <span>на примерах с котиками</span>
+            </div>
+        </div>
+        <nav>
+            <a href="#input-print" class="nav-link">Ввод/вывод</a>
+            <a href="#classes" class="nav-link">Классы</a>
+            <a href="#lists-functions" class="nav-link">Списки и функции</a>
+            <a href="#files" class="nav-link">Файлы</a>
+            <a href="#logic" class="nav-link">Условия и циклы</a>
+            <a href="#strings-types" class="nav-link">Строки и типы</a>
+            <a href="#extra" class="nav-link">Дополнительно</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <section>
+        <div class="intro-card">
+            <h1>Шпаргалка по Python 🐱</h1>
+            <p>
+                Здесь собраны основные вещи, которые тебе нужны для задач: ввод данных, классы, списки, работа
+                с файлами, циклы, условия и немного “плюшек” вроде замера времени.  
+            </p>
+            <div class="intro-badges">
+                <span class="badge badge-accent">input, классы, файлы, циклы</span>
+                <span class="badge">всё то же самое, но с котиками</span>
+                <span class="badge">подходит для быстрого повторения</span>
+            </div>
+        </div>
+
+        <!-- Ввод / вывод -->
+        <article id="input-print" class="section-card">
+            <div class="section-tag">Блок 1 · Ввод и вывод</div>
+            <h2>Функции <code>input()</code> и <code>print()</code></h2>
+            <p class="section-desc">
+                <code>input()</code> используется, чтобы спросить что-то у пользователя (например, имя котика или его возраст).  
+                <code>print()</code> выводит информацию на экран — текст, числа, переменные.
+            </p>
+
+            <ul class="section-list">
+                <li><code>input(подсказка)</code> всегда возвращает строку (<code>str</code>).</li>
+                <li>Если нужно число (например, возраст кота) — оборачиваем в <code>int()</code> или <code>float()</code>.</li>
+                <li><code>print()</code> может выводить несколько значений сразу, через запятую.</li>
+                <li>Параметры <code>sep</code> и <code>end</code> управляют разделителем и концом строки.</li>
+            </ul>
+
+            <div class="code-caption">Пример: спрашиваем имя кота и его возраст, потом выводим:</div>
+            <div class="code-block">
+cat_name = input("Как зовут котика? ")
+cat_age = int(input("Сколько ему лет? "))
+
+print("Это котик по имени", cat_name)
+print("Ему", cat_age, "лет")
+            </div>
+
+            <div class="code-caption">Настройка разделителя и конца строки:</div>
+            <div class="code-block">
+print("Кот", "Мурзик", sep=": ", end=" любит спать.\\n")
+# Выведет: Кот: Мурзик любит спать.
+            </div>
+
+            <div class="pill-row">
+                <span class="pill pill-strong">input() → всегда str</span>
+                <span class="pill">int(input()) → число</span>
+                <span class="pill">print(a, b, c)</span>
+            </div>
+        </article>
+
+        <!-- Классы -->
+        <article id="classes" class="section-card">
+            <div class="section-tag">Блок 2 · Классы и объекты</div>
+            <h2>Класс <code>Cat</code> — описываем котика</h2>
+            <p class="section-desc">
+                Класс — это свой тип данных. В примерах ниже мы создаём класс <code>Cat</code>, который хранит имя кота,
+                его возраст и любимый корм.
+            </p>
+
+            <div class="code-caption">Определение класса <code>Cat</code>:</div>
+            <div class="code-block">
+class Cat:
+    def __init__(self, name, age, favorite_food):
+        self.name = name               # имя кота (строка)
+        self.age = age                 # возраст (int)
+        self.favorite_food = favorite_food  # любимый корм (строка)
+            </div>
+
+            <ul class="section-list">
+                <li><code>class Cat:</code> — объявление класса.</li>
+                <li><code>def __init__(...)</code> — конструктор, вызывается при создании кота.</li>
+                <li><code>self</code> — ссылка на конкретного котика.</li>
+                <li><code>self.name</code>, <code>self.age</code>, <code>self.favorite_food</code> — атрибуты (поля) объекта.</li>
+            </ul>
+
+            <div class="code-caption">Создание объекта и доступ к его полям:</div>
+            <div class="code-block">
+murzik = Cat("Мурзик", 3, "тунец")
+
+print(murzik.name)          # Мурзик
+print(murzik.age)           # 3
+print(murzik.favorite_food) # тунец
+            </div>
+
+            <div class="pill-row">
+                <span class="pill pill-strong">__init__ — конструктор</span>
+                <span class="pill">self.поле = значение</span>
+                <span class="pill">cat = Cat(...)</span>
+            </div>
+        </article>
+
+        <!-- Списки и функции -->
+        <article id="lists-functions" class="section-card">
+            <div class="section-tag">Блок 3 · Списки и функции</div>
+            <h2>Список котиков и функции для работы с ним</h2>
+            <p class="section-desc">
+                Вместо списка учеников теперь — список котов. Мы можем хранить сразу много объектов <code>Cat</code>, а
+                функции будут работать с этим списком: выводить всех котиков, выводить только котят, считать средний возраст.
+            </p>
+
+            <div class="code-caption">Создание списка и добавление котов:</div>
+            <div class="code-block">
+cats = []
+
+cat1 = Cat("Мурзик", 3, "тунец")
+cat2 = Cat("Снежок", 1, "курочка")
+cat3 = Cat("Луна", 5, "сухой корм")
+
+cats.append(cat1)
+cats.append(cat2)
+cats.append(cat3)
+            </div>
+
+            <ul class="section-list">
+                <li><code>[]</code> — пустой список.</li>
+                <li><code>append()</code> — добавить элемент в конец списка.</li>
+                <li><code>for cat in cats:</code> — перебор всех котиков.</li>
+                <li><code>len(cats)</code> — количество котов в списке.</li>
+            </ul>
+
+            <div class="code-caption">Функция для вывода всех котов:</div>
+            <div class="code-block">
+def print_cats(cats):
+    for cat in cats:
+        print(cat.name, "-", cat.age, "лет,", "любит", cat.favorite_food)
+    print()
+            </div>
+
+            <div class="code-caption">Функция для вывода только котят (например, до 2 лет):</div>
+            <div class="code-block">
+def print_kittens(cats):
+    print("Котята (до 2 лет):")
+    for cat in cats:
+        if cat.age &lt;= 2:
+            print(cat.name)
+    print()
+            </div>
+
+            <div class="code-caption">Функция для подсчёта среднего возраста котов:</div>
+            <div class="code-block">
+def average_cat_age(cats):
+    total_age = 0
+    for cat in cats:
+        total_age += cat.age
+
+    average = total_age / len(cats)
+    print("Средний возраст котиков:", average)
+            </div>
+
+            <div class="pill-row">
+                <span class="pill pill-strong">def имя_функции(параметры):</span>
+                <span class="pill">for cat in cats:</span>
+                <span class="pill">len(список)</span>
+            </div>
+        </article>
+
+        <!-- Работа с файлами -->
+        <article id="files" class="section-card">
+            <div class="section-tag">Блок 4 · Файлы</div>
+            <h2>Чтение и запись файлов: <code>cats.txt</code> и <code>cats_quotes.txt</code></h2>
+            <p class="section-desc">
+                Раньше у тебя были файлы <code>pupils.txt</code> и <code>quotes.txt</code>.  
+                Логика та же самая, только теперь это, например, <code>cats.txt</code> с информацией о котах и
+                <code>cats_quotes.txt</code> с забавными “мыслями” котиков.
+            </p>
+
+            <h3 style="font-size:0.95rem;margin-top:6px;">Чтение котов из файла <code>cats.txt</code></h3>
+            <div class="code-caption">Файл содержит строки формата: <code>Имя Возраст ЛюбимыйКорм</code></div>
+            <div class="code-block">
+cats = []
+
+with open("cats.txt", "r", encoding="utf-8") as file:
+    for line in file:
+        data = line.split()          # ["Мурзик", "3", "тунец"]
+        name = data[0]
+        age = int(data[1])
+        favorite_food = data[2]
+
+        cat = Cat(name, age, favorite_food)
+        cats.append(cat)
+            </div>
+
+            <ul class="section-list">
+                <li><code>with open(..., "r") as file:</code> — открыть файл для чтения.</li>
+                <li><code>encoding="utf-8"</code> — чтобы нормально читать русский текст.</li>
+                <li><code>for line in file:</code> — читать файл построчно.</li>
+                <li><code>line.split()</code> — разделить строку по пробелам на части.</li>
+            </ul>
+
+            <h3 style="font-size:0.95rem;margin-top:10px;">Чтение файла с “цитатами” котиков</h3>
+            <div class="code-block">
+with open("cats_quotes.txt", "r", encoding="utf-8") as file:
+    for line in file:
+        print(line)
+            </div>
+
+            <h3 style="font-size:0.95rem;margin-top:10px;">Запись новой “цитаты” кота в файл</h3>
+            <div class="code-block">
+quote = input("Что бы сказал ваш кот? ")
+cat_name = input("Как зовут этого кота? ")
+
+with open("cats_quotes.txt", "a", encoding="utf-8") as file:
+    file.write(quote + "\\n" + "(" + cat_name + ")" + "\\n")
+            </div>
+
+            <ul class="section-list">
+                <li><code>"r"</code> — чтение (<em>read</em>).</li>
+                <li><code>"w"</code> — запись, стирает содержимое (<em>write</em>).</li>
+                <li><code>"a"</code> — добавление в конец файла (<em>append</em>).</li>
+                <li><code>file.write("текст\\n")</code> — записать строку (не забывать <code>\\n</code>).</li>
+            </ul>
+
+            <div class="pill-row">
+                <span class="pill pill-strong">with open(...) as file:</span>
+                <span class="pill">"r" / "w" / "a"</span>
+                <span class="pill">line.split()</span>
+            </div>
+        </article>
+
+        <!-- Логика, циклы -->
+        <article id="logic" class="section-card">
+            <div class="section-tag">Блок 5 · Условия и циклы</div>
+            <h2><code>if</code>, <code>for</code>, <code>while True</code> и <code>break</code></h2>
+            <p class="section-desc">
+                Условия и циклы управляют логикой программы.  
+                На примерах с котами: можно вывести только голодных котов, повторять добавление новых котиков,
+                пока пользователь хочет это делать, и т.п.
+            </p>
+
+            <h3 style="font-size:0.95rem;margin-top:6px;">Условие <code>if / elif / else</code></h3>
+            <div class="code-block">
+if cat.age &lt; 1:
+    print("Это котёнок")
+elif cat.age &lt;= 7:
+    print("Это взрослый кот")
+else:
+    print("Это почтенный кот-пенсионер")
+            </div>
+
+            <h3 style="font-size:0.95rem;margin-top:10px;">Цикл <code>for</code> по списку котов</h3>
+            <div class="code-block">
+for cat in cats:
+    print(cat.name, "любит", cat.favorite_food)
+            </div>
+
+            <h3 style="font-size:0.95rem;margin-top:10px;">Цикл <code>while True</code> для добавления “цитат” котиков</h3>
+            <div class="code-block">
+while True:
+    answer = input("Добавить новую цитату котика? (да/нет) ")
+    answer = answer.lower()
+
+    if answer == "да":
+        quote = input("Введите цитату: ")
+        cat_name = input("Имя кота: ")
+
+        with open("cats_quotes.txt", "a", encoding="utf-8") as file:
+            file.write(quote + "\\n" + "(" + cat_name + ")" + "\\n")
+    else:
+        break
+            </div>
+
+            <ul class="section-list">
+                <li><code>while True:</code> — бесконечный цикл, пока не встретится <code>break</code>.</li>
+                <li><code>break</code> — выход из цикла.</li>
+                <li><code>answer.lower()</code> — приводим ответ к нижнему регистру, чтобы сравнение было надёжным.</li>
+            </ul>
+
+            <div class="pill-row">
+                <span class="pill pill-strong">while True + break</span>
+                <span class="pill">if / elif / else</span>
+                <span class="pill">for cat in cats</span>
+            </div>
+        </article>
+
+        <!-- Строки и типы -->
+        <article id="strings-types" class="section-card">
+            <div class="section-tag">Блок 6 · Строки и типы данных</div>
+            <h2>Строки, <code>split()</code>, <code>int()</code>, <code>lower()</code></h2>
+            <p class="section-desc">
+                Почти всё, что приходит из <code>input()</code> и файлов — строки.  
+                Потом ты превращаешь их в числа или разбираешь на части.
+            </p>
+
+            <h3 style="font-size:0.95rem;margin-top:6px;">Метод <code>split()</code> — разбить строку про кота</h3>
+            <div class="code-block">
+line = "Мурзик 3 тунец"
+data = line.split()      # ["Мурзик", "3", "тунец"]
+
+name = data[0]
+age = int(data[1])
+favorite_food = data[2]
+            </div>
+
+            <ul class="section-list">
+                <li><code>split()</code> без аргументов делит по пробелам.</li>
+                <li><code>data[0]</code>, <code>data[1]</code>, <code>data[2]</code> — обращение к элементам списка по индексу.</li>
+                <li><code>int(data[1])</code> — превращает строку <code>"3"</code> в число <code>3</code>.</li>
+            </ul>
+
+            <h3 style="font-size:0.95rem;margin-top:10px;">Метод <code>lower()</code> — для ответов пользователя</h3>
+            <div class="code-block">
+answer = input("Кот доволен своей миской? (Да/Нет) ")
+answer = answer.lower()
+
+if answer == "да":
+    print("Кот мурлычет :)")
+else:
+    print("Кот недоволен и требует ещё корма!")
+            </div>
+
+            <h3 style="font-size:0.95rem;margin-top:10px;">Основные типы данных</h3>
+            <ul class="section-list">
+                <li><code>str</code> — строки: <code>"Мурзик"</code>, <code>"тунец"</code>, <code>"3"</code>.</li>
+                <li><code>int</code> — целые числа: возраст кота — <code>3</code>, количество мисок — <code>5</code>.</li>
+                <li><code>float</code> — числа с точкой: вес кота в кг — <code>4.5</code>.</li>
+                <li><code>bool</code> — логические значения: <code>True</code> / <code>False</code>, например <code>cat_is_hungry = True</code>.</li>
+                <li><code>list</code> — список: <code>["Мурзик", "Снежок", "Луна"]</code> или <code>[cat1, cat2, cat3]</code>.</li>
+            </ul>
+
+            <div class="pill-row">
+                <span class="pill pill-strong">str → int: int("3")</span>
+                <span class="pill">"Текст".lower()</span>
+                <span class="pill">line.split()</span>
+            </div>
+        </article>
+
+        <!-- Дополнительно -->
+        <article id="extra" class="section-card">
+            <div class="section-tag">Блок 7 · Дополнительно</div>
+            <h2>Замер времени, списковые включения и словари</h2>
+            <p class="section-desc">
+                Несколько полезных приёмов, которые часто встречаются: измерение времени выполнения кода,  
+                списковые включения (короткий способ собрать список) и словари для хранения информации о котиках.
+            </p>
+
+            <h3 style="font-size:0.95rem;margin-top:6px;">Модуль <code>time</code> — измеряем, сколько код “думал”</h3>
+            <div class="code-block">
+import time
+
+start_time = time.time()
+
+# например, вывод всех котиков
+print_cats(cats)
+
+end_time = time.time()
+print("Код работал:", end_time - start_time, "секунд")
+            </div>
+
+            <ul class="section-list">
+                <li><code>import time</code> — подключить модуль.</li>
+                <li><code>time.time()</code> — текущее время в секундах.</li>
+                <li>Разница между <code>end_time</code> и <code>start_time</code> — время работы кода.</li>
+            </ul>
+
+            <h3 style="font-size:0.95rem;margin-top:10px;">Списковые включения (list comprehensions)</h3>
+            <div class="code-block">
+# список возрастов всех котов
+ages = [cat.age for cat in cats]
+
+# список имён только взрослых котов (старше 2 лет)
+adult_cat_names = [cat.name for cat in cats if cat.age &gt; 2]
+            </div>
+
+            <h3 style="font-size:0.95rem;margin-top:10px;">Словари (dict) — информация о коте по ключам</h3>
+            <div class="code-block">
+cat_info = {
+    "name": "Мурзик",
+    "age": 3,
+    "color": "серый",
+    "favorite_food": "тунец"
+}
+
+print(cat_info["name"])     # Мурзик
+cat_info["weight"] = 4.5    # добавили новый ключ "weight"
+            </div>
+
+            <div class="pill-row">
+                <span class="pill pill-strong">import time</span>
+                <span class="pill">[cat.age for cat in cats]</span>
+                <span class="pill">{"key": "value"}</span>
+            </div>
+        </article>
+    </section>
+
+    <!-- Боковая панель -->
+    <aside class="side-panel">
+        <div class="side-card">
+            <h3>Структура шпаргалки</h3>
+            <div class="toc">
+                <a href="#input-print">1. Ввод и вывод</a>
+                <a href="#classes">2. Классы и объекты</a>
+                <a href="#lists-functions">3. Списки и функции</a>
+                <a href="#files">4. Работа с файлами</a>
+                <a href="#logic">5. Условия и циклы</a>
+                <a href="#strings-types">6. Строки и типы</a>
+                <a href="#extra">7. Дополнительно</a>
+            </div>
+        </div>
+
+        <div class="side-card">
+            <h3>Мини-алгоритмы (на котиках)</h3>
+            <ul class="mini-list">
+                <li>Прочитать котов из файла → <code>open("cats.txt")</code> → <code>for line in file</code> → <code>split()</code> → <code>Cat(...)</code> → <code>append()</code>.</li>
+                <li>Посчитать средний возраст котиков → суммировать <code>cat.age</code> → разделить на <code>len(cats)</code>.</li>
+                <li>Найти котят → пройти по <code>cats</code> → условие <code>if age &lt;= 2</code>.</li>
+                <li>Добавить “цитату” кота → спросить текст и имя → открыть <code>cats_quotes.txt</code> в режиме <code>"a"</code> → <code>write()</code>.</li>
+                <li>Остановить цикл добавления → <code>while True</code> + <code>answer.lower()</code> + <code>if answer != "да": break</code>.</li>
+            </ul>
+        </div>
+    </aside>
+</main>
+
+<footer>
+    <div class="footer-inner">
+        <span>Python-шпаргалка на котиках: те же конструкции, другие примеры.</span>
+        <span>Можно расширять: добавить классы “Хозяин”, “Миска”, “Игрушка” и усложнить логику.</span>
+    </div>
+</footer>
+
+</body>
+</html>
